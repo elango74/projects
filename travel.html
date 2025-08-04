@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Greek Adventure</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">GreeceTrip</div>
+            <ul class="nav-links">
+                <li><a href="#about">About</a></li>
+                <li><a href="#destinations">Destinations</a></li>
+                <li><a href="#itinerary">Itinerary</a></li>
+                <li><a href="#gallery">Gallery</a></li>
+            </ul>
+            <button id="theme-toggle"><i class="fas fa-moon"></i></button>
+        </nav>
+        <div class="hero">
+            <h1>Discover the Magic of Greece</h1>
+            <p>Explore ancient history, stunning islands, and delicious cuisine</p>
+            <button id="explore-btn">Start Exploring</button>
+        </div>
+    </header>
+    
+    <main>
+        <section id="about" class="section">
+            <h2>About Greece</h2>
+            <div class="content-box">
+                <img src="https://cdn.codechef.com/Learning/Greece.webp" alt="Greece location" class="float-left">
+                <p>Greece, officially the <em>Hellenic Republic</em>, is a country in Southeast Europe. Known for its ancient history, stunning islands, and Mediterranean cuisine, Greece is a dream destination for travelers worldwide.</p>
+                <p>As the cradle of Western civilization, Greece is the birthplace of democracy, philosophy, the Olympic Games, and much more. Its rich cultural heritage is visible in its ancient ruins, museums, and traditional villages.</p>
+                <a href="https://en.wikipedia.org/wiki/Greece" target="_blank" class="learn-more">Learn More <i class="fas fa-arrow-right"></i></a>
+            </div>
+        </section>
+
+        <section id="destinations" class="section">
+            <h2>Popular Destinations</h2>
+            <div class="cards-container">
+                <div class="card">
+                    <img src="https://cdn.codechef.com/Learning/MILOS.jpeg" alt="Milos Island">
+                    <h3>Milos Island</h3>
+                    <p>Famous for its crystal-clear waters and unique rock formations, Milos is a volcanic island with stunning beaches.</p>
+                    <button class="card-btn">Explore</button>
+                </div>
+                <div class="card">
+                    <img src="https://images.unsplash.com/photo-1555993539-1732b0258235?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Athens">
+                    <h3>Athens</h3>
+                    <p>The historic capital city, home to the iconic Acropolis and vibrant city life.</p>
+                    <button class="card-btn">Explore</button>
+                </div>
+                <div class="card">
+                    <img src="https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1631&q=80" alt="Santorini">
+                    <h3>Santorini</h3>
+                    <p>Famous for its white-washed buildings, blue domes, and breathtaking sunsets.</p>
+                    <button class="card-btn">Explore</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="itinerary" class="section">
+            <h2>Trip Itinerary</h2>
+            <div class="content-box">
+                <p>Here's our 9-day adventure through Greece:</p>
+                <div class="itinerary-controls">
+                    <button id="prev-day"><i class="fas fa-chevron-left"></i></button>
+                    <span id="current-day">Day 1: Arrival in Athens</span>
+                    <button id="next-day"><i class="fas fa-chevron-right"></i></button>
+                </div>
+                <div class="itinerary-content">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Location</th>
+                                <th>Activities</th>
+                            </tr>
+                        </thead>
+                        <tbody id="itinerary-body">
+                            <!-- Filled by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section id="gallery" class="section">
+            <h2>Photo Gallery</h2>
+            <div class="gallery-grid">
+                <!-- Images will be added by JavaScript -->
+            </div>
+        </section>
+    </main>
+    
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Contact Us</h3>
+                <p><i class="fas fa-envelope"></i> help@greecetrip.com</p>
+                <p><i class="fas fa-phone"></i> +30 210 123 4567</p>
+            </div>
+            <div class="footer-section">
+                <h3>Follow Us</h3>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2023 GreeceTrip. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
