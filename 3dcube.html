@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive 3D Cube</title>
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            font-family: 'Arial', sans-serif;
+            overflow-x: hidden;
+            color: white;
+            padding: 20px 0;
+        }
+
+        .container {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            margin-bottom: 30px;
+            color: #4cc9f0;
+            text-shadow: 0 0 10px rgba(76, 201, 240, 0.5);
+        }
+
+        .scene {
+            width: 200px;
+            height: 200px;
+            perspective: 1000px;
+            margin: 0 auto 30px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .cube {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.5s ease;
+            transform: rotateX(20deg) rotateY(30deg);
+        }
+
+        .face {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            background: rgba(76, 201, 240, 0.7);
+            box-shadow: 0 0 20px rgba(76, 201, 240, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .face:hover {
+            background: rgba(76, 201, 240, 0.9);
+            transform: translateZ(10px);
+        }
+
+        .front { transform: translateZ(100px); background: rgba(76, 201, 240, 0.7); }
+        .back { transform: rotateY(180deg) translateZ(100px); background: rgba(240, 84, 84, 0.7); }
+        .right { transform: rotateY(90deg) translateZ(100px); background: rgba(76, 201, 240, 0.5); }
+        .left { transform: rotateY(-90deg) translateZ(100px); background: rgba(240, 84, 84, 0.5); }
+        .top { transform: rotateX(90deg) translateZ(100px); background: rgba(76, 201, 240, 0.6); }
+        .bottom { transform: rotateX(-90deg) translateZ(100px); background: rgba(240, 84, 84, 0.6); }
+
+        .controls {
+            margin: 20px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            box-sizing: border-box;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background: #4cc9f0;
+            border: none;
+            border-radius: 25px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(76, 201, 240, 0.3);
+        }
+
+        button:hover {
+            background: #3aa8d4;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(76, 201, 240, 0.4);
+        }
+
+        .color-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+            max-width: 300px;
+        }
+        
+        .color-option {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+        
+        .color-option label {
+            color: white;
+            font-size: 14px;
+            min-width: 100px;
+        }
+        
+        .color-picker {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+        }
+        
+        .color-presets {
+            display: flex;
+            gap: 8px;
+            margin-top: 5px;
+        }
+        
+        .color-preset {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .color-preset:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        input[type="color"] {
+            width: 50px;
+            height: 30px;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            background: transparent;
+        }
+
+        input[type="color"]::-webkit-color-swatch {
+            border-radius: 15px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .size-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        input[type="range"] {
+            width: 200px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Interactive 3D Cube</h1>
+        
+        <div class="scene" id="scene">
+            <div class="cube" id="cube">
+                <div class="face front">Front</div>
+                <div class="face back">Back</div>
+                <div class="face right">Right</div>
+                <div class="face left">Left</div>
+                <div class="face top">Top</div>
+                <div class="face bottom">Bottom</div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <div>
+                <button id="spin">Auto Spin</button>
+                <button id="reset">Reset View</button>
+            </div>
+            
+            <div class="color-controls">
+                <div class="color-option">
+                    <label for="faceColor">Main Color:</label>
+                    <div class="color-picker">
+                        <input type="color" id="faceColor" value="#4cc9f0">
+                        <div class="color-presets">
+                            <div class="color-preset" style="background: #4cc9f0;" data-color="#4cc9f0"></div>
+                            <div class="color-preset" style="background: #f72585;" data-color="#f72585"></div>
+                            <div class="color-preset" style="background: #7209b7;" data-color="#7209b7"></div>
+                            <div class="color-preset" style="background: #3a86ff;" data-color="#3a86ff"></div>
+                            <div class="color-preset" style="background: #4cc9f0;" data-color="#4cc9f0"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="color-option">
+                    <label for="secondaryColor">Secondary Color:</label>
+                    <div class="color-picker">
+                        <input type="color" id="secondaryColor" value="#f06292">
+                        <div class="color-presets">
+                            <div class="color-preset" style="background: #f06292;" data-color="#f06292"></div>
+                            <div class="color-preset" style="background: #4cc9f0;" data-color="#4cc9f0"></div>
+                            <div class="color-preset" style="background: #f72585;" data-color="#f72585"></div>
+                            <div class="color-preset" style="background: #7209b7;" data-color="#7209b7"></div>
+                            <div class="color-preset" style="background: #3a86ff;" data-color="#3a86ff"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="color-option">
+                    <label for="bgGradient1">Background 1:</label>
+                    <div class="color-picker">
+                        <input type="color" id="bgGradient1" value="#1a1a2e">
+                    </div>
+                </div>
+                
+                <div class="color-option">
+                    <label for="bgGradient2">Background 2:</label>
+                    <div class="color-picker">
+                        <input type="color" id="bgGradient2" value="#16213e">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="size-control">
+                <label for="cubeSize">Size: </label>
+                <input type="range" id="cubeSize" min="100" max="300" value="200">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const cube = document.getElementById('cube');
+        const scene = document.getElementById('scene');
+        const spinButton = document.getElementById('spin');
+        const resetButton = document.getElementById('reset');
+        const colorPicker = document.getElementById('faceColor');
+        const sizeControl = document.getElementById('cubeSize');
+        
+        let isSpinning = false;
+        let spinInterval;
+        let mouseX = 0;
+        let mouseY = 0;
+        let targetX = 0;
+        let targetY = 0;
+        
+        // Movement settings
+        const maxTilt = 30; // Maximum tilt in degrees
+        const movementIntensity = 0.5; // How much the cube moves with the cursor
+        const smoothing = 0.2; // Lower = smoother but slower
+        
+        // Initialize cursor and position variables
+        cursorX = window.innerWidth / 2;
+        cursorY = window.innerHeight / 2;
+        targetX = 0;
+        targetY = 0;
+        let posX = 0;
+        let posY = 0;
+        
+        // Mouse move interaction
+        document.addEventListener('mousemove', (e) => {
+            if (isSpinning) return;
+            
+            // Get cursor position
+            cursorX = e.clientX;
+            cursorY = e.clientY;
+            
+            // Calculate center of viewport
+            const centerX = window.innerWidth / 2;
+            const centerY = window.innerHeight / 2;
+            
+            // Calculate distance from center (normalized to -1 to 1)
+            const deltaX = (cursorX - centerX) / centerX;
+            const deltaY = (cursorY - centerY) / centerY;
+            
+            // Calculate target rotation and position
+            targetY = deltaX * maxTilt;
+            targetX = -deltaY * maxTilt;
+            
+            // Calculate position offset (subtle parallax effect)
+            posX = deltaX * 30 * movementIntensity;
+            posY = deltaY * 30 * movementIntensity;
+        });
+        
+        // Animation loop
+        function animate() {
+            if (!isSpinning) {
+                // Get current rotation values
+                const transform = window.getComputedStyle(cube).transform;
+                let currentX = 0;
+                let currentY = 0;
+                
+                // Extract current rotation from transform matrix if available
+                if (transform !== 'none') {
+                    const matrix = new DOMMatrixReadOnly(transform);
+                    currentY = Math.atan2(matrix.m13, matrix.m11) * (180 / Math.PI);
+                    currentX = Math.atan2(-matrix.m23, Math.hypot(matrix.m33, matrix.m13)) * (180 / Math.PI);
+                }
+                
+                // Apply smoothing to the rotation
+                const newX = currentX + (targetX - currentX) * smoothing;
+                const newY = currentY + (targetY - currentY) * smoothing;
+                
+                // Apply the new transformation with both rotation and position
+                cube.style.transform = `
+                    rotateX(${newX}deg) 
+                    rotateY(${newY}deg) 
+                    translate3d(${posX}px, ${posY}px, 0)
+                `;
+                
+                // Update shadow based on cursor position
+                const shadowX = (cursorX / window.innerWidth - 0.5) * 30;
+                const shadowY = (cursorY / window.innerHeight - 0.5) * 30;
+                cube.style.boxShadow = `
+                    ${shadowX}px ${shadowY}px 40px rgba(0, 0, 0, 0.3),
+                    0 0 60px rgba(76, 201, 240, 0.1)
+                `;
+            }
+            
+            requestAnimationFrame(animate);
+        }
+        
+        animate();
+        
+        // Auto spin
+        let rotation = 0;
+        function spinCube() {
+            rotation += 0.5;
+            cube.style.transform = `rotateX(${20 + Math.sin(rotation * 0.01) * 30}deg) rotateY(${rotation}deg)`;
+            spinInterval = requestAnimationFrame(spinCube);
+        }
+        
+        // Event Listeners
+        spinButton.addEventListener('click', () => {
+            isSpinning = !isSpinning;
+            spinButton.textContent = isSpinning ? 'Stop Spinning' : 'Auto Spin';
+            
+            if (isSpinning) {
+                spinCube();
+            } else {
+                cancelAnimationFrame(spinInterval);
+            }
+        });
+        
+        resetButton.addEventListener('click', () => {
+            isSpinning = false;
+            spinButton.textContent = 'Auto Spin';
+            cancelAnimationFrame(spinInterval);
+            cube.style.transform = 'rotateX(20deg) rotateY(30deg)';
+        });
+        
+        // Color pickers
+        const colorPickers = {
+            faceColor: document.getElementById('faceColor'),
+            secondaryColor: document.getElementById('secondaryColor'),
+            bgGradient1: document.getElementById('bgGradient1'),
+            bgGradient2: document.getElementById('bgGradient2')
+        };
+        
+        // Apply colors to cube
+        function updateCubeColors() {
+            const mainColor = colorPickers.faceColor.value;
+            const secondaryColor = colorPickers.secondaryColor.value;
+            
+            // Update face colors with gradient based on position
+            const faces = document.querySelectorAll('.face');
+            faces.forEach((face, index) => {
+                // Create a gradient based on face position
+                let gradient;
+                switch(index) {
+                    case 0: // Front
+                        gradient = `linear-gradient(135deg, ${mainColor}, ${secondaryColor})`;
+                        break;
+                    case 1: // Back
+                        gradient = `linear-gradient(135deg, ${secondaryColor}, ${mainColor})`;
+                        break;
+                    case 2: // Right
+                        gradient = `linear-gradient(135deg, ${adjustColor(mainColor, 20)}, ${adjustColor(secondaryColor, -20)})`;
+                        break;
+                    case 3: // Left
+                        gradient = `linear-gradient(135deg, ${adjustColor(secondaryColor, 20)}, ${adjustColor(mainColor, -20)})`;
+                        break;
+                    case 4: // Top
+                        gradient = `linear-gradient(135deg, ${lightenColor(mainColor, 10)}, ${lightenColor(secondaryColor, 10)})`;
+                        break;
+                    case 5: // Bottom
+                        gradient = `linear-gradient(135deg, ${darkenColor(mainColor, 10)}, ${darkenColor(secondaryColor, 10)})`;
+                        break;
+                }
+                
+                face.style.background = gradient;
+                face.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+            });
+            
+            // Update background gradient
+            document.body.style.background = `linear-gradient(135deg, ${colorPickers.bgGradient1.value}, ${colorPickers.bgGradient2.value})`;
+        }
+        
+        // Helper functions for color manipulation
+        function adjustColor(color, amount) {
+            return '#' + color.replace(/^#/, '').replace(/../g, color => 
+                ('0' + Math.min(255, Math.max(0, parseInt(color, 16) + amount)).toString(16)).substr(-2)
+            );
+        }
+        
+        function lightenColor(color, percent) {
+            return adjustColor(color, Math.round(2.55 * percent));
+        }
+        
+        function darkenColor(color, percent) {
+            return adjustColor(color, -Math.round(2.55 * percent));
+        }
+        
+        // Add event listeners for all color pickers
+        Object.values(colorPickers).forEach(picker => {
+            picker.addEventListener('input', updateCubeColors);
+        });
+        
+        // Add click handlers for color presets
+        document.querySelectorAll('.color-preset').forEach(preset => {
+            preset.addEventListener('click', (e) => {
+                const color = e.target.getAttribute('data-color');
+                const input = e.target.closest('.color-option').querySelector('input[type="color"]');
+                input.value = color;
+                input.dispatchEvent(new Event('input'));
+            });
+        });
+        
+        // Initialize colors
+        updateCubeColors();
+        
+        // Size control
+        sizeControl.addEventListener('input', (e) => {
+            const size = e.target.value;
+            document.documentElement.style.setProperty('--cube-size', `${size}px`);
+            
+            // Update scene size
+            scene.style.width = `${size}px`;
+            scene.style.height = `${size}px`;
+            
+            // Update face sizes and positions
+            const faces = document.querySelectorAll('.face');
+            const halfSize = size / 2;
+            
+            faces.forEach(face => {
+                face.style.width = `${size}px`;
+                face.style.height = `${size}px`;
+                face.style.transform = face.style.transform.replace(/translateZ\([^)]+\)/, `translateZ(${halfSize}px)`);
+            });
+        });
+        
+        // Add smooth transition for size changes
+        const cubeFaces = document.querySelectorAll('.face');
+        cubeFaces.forEach(face => {
+            face.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+        });
+        
+        // Touch support for mobile
+        let touchStartX = 0;
+        let touchStartY = 0;
+        
+        scene.addEventListener('touchstart', (e) => {
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+            e.preventDefault();
+        }, { passive: false });
+        
+        scene.addEventListener('touchmove', (e) => {
+            if (isSpinning) return;
+            
+            const touchX = e.touches[0].clientX;
+            const touchY = e.touches[0].clientY;
+            
+            const deltaX = touchX - touchStartX;
+            const deltaY = touchY - touchStartY;
+            
+            targetX = deltaY * 0.5;
+            targetY = deltaX * 0.5;
+            
+            e.preventDefault();
+        }, { passive: false });
+    </script>
+</body>
+</html>
